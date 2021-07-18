@@ -1,7 +1,7 @@
 # SalmanBot - BETA!
 This bot can do:-
 * Share new reddit upvote posts
-* Wheel
-* TTS (Text To Speech)
-* Special commands
+* Wheel -DONE
+* TTS (Text To Speech) -DONE
+* Special commands (Clear)
 * Math equations

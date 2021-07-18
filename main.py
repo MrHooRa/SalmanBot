@@ -87,7 +87,6 @@ async def _test(ctx):
 # text -> voice :D
 # Usage: $tts lang text
 
-
 @client.command(pass_context=True, name="tts")
 async def _tts(ctx, lan, *msg):
 # async def _tts(ctx, msg, lan="ar"):
@@ -119,16 +118,28 @@ async def _tts(ctx, lan, *msg):
         logs.log(f"Something wrong with tts(lan={lan}, msg={msg})\t-> Exception: {e}", True, type="Error")
 # ____----Text to voice----____
 
-# ----____Config____----
-# Change config with command :D
-# Usage: $config help
+# ----____Random Wheel____----
+# get random with animation
 
-@client.command(pass_context=True, name="config")
-async def _config(ctx, text):
-    await ctx.send()
+@client.command(pass_context=True, name="wheelV")
+async def _wheel(ctx, *arr):
+    getWinner = arr[random.randint(0, (len(arr) - 1))]
+    msg = await ctx.channel.send(f"The winner is {getWinner}...")
 
+    for _ in range(4):
+        await asyncio.sleep(0.05)
+        await msg.edit(content=f"The winner is {arr[random.randint(0, (len(arr) - 1))]}...")
+    await msg.edit(content=f"The winner is {getWinner} :D")
+# ____----Random Wheel----____
 
-# ____----Text to voice----____
+# ----____Clear channel chat____----
+# (defualt = 5)
+
+@client.command(pass_context=True, name="clear")
+async def _clear(ctx, amount=5):
+    await ctx.channel.purge(limit=(amount+1))
+    logs.log(f"Clear chat (Channel: {ctx.channel.name}, amount: {amount})", True, type="command")
+# ____----Clear channel chat----____
 
 ##+##+##+##+##+##+##+##+##+##+##+##+##+##+##+##+##
 # DO NOT ADD/CHANGE ANYTHING UNDER THIS LINE!
