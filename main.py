@@ -23,16 +23,24 @@ This discord bot can do:-
 
 """
 
+import sys
+sys.path.append("class")
 
 # Defualt packages
 import os, asyncio, random
 
+# my classes
+import runDiscord
+from logs import *
+
 # Get env values
 from decouple import config
 
-# Discord packages
-import discord
-from discord.ext import commands
+# # Discord packages
+# import discord
+# from discord.ext import commands
+
+logs = Logs(name='main.py')
 
 # V=================== Database details ===================V #
 dataBase = (config('DB_HOSTNAME'), 
@@ -43,18 +51,34 @@ dataBase = (config('DB_HOSTNAME'),
 
 
 # V=================== Discord details ==================V #
-# Discord token
-TOKEN = config('TOKEN')
+runDiscord = runDiscord.runDiscord(config('TOKEN'))
 
-# Set prefix (dollr sign or anything you want :D)
-client = commands.Bot(command_prefix="$")
+
+# # Discord token
+# TOKEN = config('TOKEN')
+
+# # Set prefix (dollr sign or anything you want :D)
+# client = commands.Bot(command_prefix="$")
 # ^=====================================================^ #
 
 
 
 
 ##+##+##+##+##+##+##+##+##+##+##+##+##+##+##+##+##
-# DO NOT ADD ANYTHING UNDER THIS LINE!
+# DO NOT ADD/CHANGE ANYTHING UNDER THIS LINE!
 ##+##+##+##+##+##+##+##+##+##+##+##+##+##+##+##+##
 # RUN THE BOT!
-client.run(TOKEN)
+if __name__ == '__main__':
+    msg = """
+    ***********************************
+            SalmanBot - Beta
+            ----------------
+        
+        Running in Python 3.9.6
+        '$' is default prefix command
+    ***********************************
+    """
+    logs.log("Run SalmanBot", False, "START")
+    logs.log(msg, True, "START")   
+    
+    runDiscord.run()
