@@ -4,7 +4,7 @@ class Logs():
         self.path = f"{path}logs.txt"
         self.name = f"<{name}> " if name else ""
 
-    def log(self, action, printCmd = False, type = "Info", saveInLog = True, name = '__defaultName__'):
+    def log(self, action, printCmd = False, type = "Info", saveInLog = True, name = '__defaultName__', author = "Bot"):
         """Create new log"""
         try:
             dt_string = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
@@ -15,7 +15,7 @@ class Logs():
         name = self.name if name == '__defaultName__' else name
 
         # log format
-        action = f"{name}{dt_string} | {type} | {action}"
+        action = f"{name}{dt_string} | {type} | {author} | {action}"
 
         # Save action to log file
         if saveInLog:
@@ -32,6 +32,7 @@ class Logs():
         return True
     
     def newLine(self, text = "\n"):
+        """Add new line in log file"""
         try:
             f = open(self.path, "a")
             f.write(f"{text}")
