@@ -1,0 +1,21 @@
+
+**********************************************************
+<main.py> 18/07/2021 10:20:08 | START | Run SalmanBot
+<runDiscord.py> 18/07/2021 10:20:08 | Info | client running...
+<main.py> 18/07/2021 10:20:11 | Info | Logged in as (Name: SalmanBot, ID: 806263444898054175)
+<main.py> 18/07/2021 10:20:11 | Info | SalmanBot is ready :D
+<main.py> 18/07/2021 10:20:26 | command | Played (Lan: it, Msg: heysalman)
+
+**********************************************************
+<main.py> 18/07/2021 10:21:21 | START | Run SalmanBot
+<runDiscord.py> 18/07/2021 10:21:21 | Info | client running...
+<main.py> 18/07/2021 10:21:24 | Info | Logged in as (Name: SalmanBot, ID: 806263444898054175)
+<main.py> 18/07/2021 10:21:24 | Info | SalmanBot is ready :D
+<main.py> 18/07/2021 10:21:49 | command | Played (Lan: ja, Msg: ('Hey', 'salman'))
+
+**********************************************************
+<main.py> 18/07/2021 10:23:14 | START | Run SalmanBot
+<runDiscord.py> 18/07/2021 10:23:14 | Info | client running...
+<main.py> 18/07/2021 10:23:17 | Info | Logged in as (Name: SalmanBot, ID: 806263444898054175)
+<main.py> 18/07/2021 10:23:17 | Info | SalmanBot is ready :D
+<main.py> 18/07/2021 10:23:32 | command | Played (Lan: en, Msg: hey salman)

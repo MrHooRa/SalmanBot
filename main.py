@@ -89,16 +89,12 @@ async def _test(ctx):
 
 @client.command(pass_context=True, name="tts")
 async def _tts(ctx, lan, *msg):
-# async def _tts(ctx, msg, lan="ar"):
+    logMsg = " ".join(msg)
     msg = "".join(msg)
-
     # Create mp3 voice and play it in discord
-    try:
+    try:    
         myObj = gTTS(text=msg, lang=lan)
         myObj.save("mp3/audio.mp3")
-
-        # log
-        logs.log(f"Played (Lan: {lan}, Msg: {msg})", True, type="command")
 
         # Calculate mp3 size (x seconds)
         duration = eyed3.load('mp3/audio.mp3').info.time_secs
@@ -113,6 +109,9 @@ async def _tts(ctx, lan, *msg):
         await vc.disconnect()
 
         await ctx.reply('تم يا وحش', mention_author=True)
+        
+        # log
+        logs.log(f"Played (Lan: {lan}, Msg: {logMsg})", True, type="command")
     except Exception as e:
         await ctx.reply('رجاءً إختر اللغة', mention_author=True)
         logs.log(f"Something wrong with tts(lan={lan}, msg={msg})\t-> Exception: {e}", True, type="Error")
