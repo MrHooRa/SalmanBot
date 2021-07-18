@@ -28,6 +28,7 @@ sys.path.append("class")
 
 # Defualt packages
 import os, asyncio, random
+import logging
 
 # my classes
 import runDiscord
@@ -36,9 +37,21 @@ from logs import *
 # Get env values
 from decouple import config
 
-# # Discord packages
-# import discord
-# from discord.ext import commands
+# Discord packages
+import discord
+from discord import FFmpegPCMAudio
+
+# Calcualte mp3 file size (seconds)
+import eyed3
+
+# Transorm from text --> voice
+from gtts import gTTS
+
+logger = logging.getLogger('discord')
+logger.setLevel(logging.DEBUG)
+handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
+handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
+logger.addHandler(handler)
 
 logs = Logs(name='main.py')
 
@@ -53,16 +66,69 @@ dataBase = (config('DB_HOSTNAME'),
 # V=================== Discord details ==================V #
 runDiscord = runDiscord.runDiscord(config('TOKEN'))
 
-
-# # Discord token
-# TOKEN = config('TOKEN')
-
-# # Set prefix (dollr sign or anything you want :D)
-# client = commands.Bot(command_prefix="$")
+client = runDiscord.getClient()
 # ^=====================================================^ #
 
 
 
+@client.event
+async def on_ready():
+    logs.log(f"Logged in as (Name: {client.user.name}, ID: {client.user.id})", True)
+    logs.log("SalmanBot is ready :D", True)
+# 000000000000000000000
+
+@client.command(pass_context=True, name="hello")
+async def _test(ctx):
+    """Reply command"""
+    await ctx.reply('Hi!', mention_author=True)
+        
+
+# ----____Text to voice____----
+# text -> voice :D
+# Usage: $tts lang text
+
+
+@client.command(pass_context=True, name="tts")
+async def _tts(ctx, lan, *msg):
+# async def _tts(ctx, msg, lan="ar"):
+    msg = "".join(msg)
+
+    # Create mp3 voice and play it in discord
+    try:
+        myObj = gTTS(text=msg, lang=lan)
+        myObj.save("mp3/audio.mp3")
+
+        # log
+        logs.log(f"Played (Lan: {lan}, Msg: {msg})", True, type="command")
+
+        # Calculate mp3 size (x seconds)
+        duration = eyed3.load('mp3/audio.mp3').info.time_secs
+
+        # Play
+        channel = ctx.message.author.voice.channel
+        vc = await channel.connect()
+        vc.play(discord.FFmpegPCMAudio('mp3/audio.mp3'))
+
+        # Disconnected from channel after x seconds
+        await asyncio.sleep((duration + 0.11))
+        await vc.disconnect()
+
+        await ctx.reply('تم يا وحش', mention_author=True)
+    except Exception as e:
+        await ctx.reply('رجاءً إختر اللغة', mention_author=True)
+        logs.log(f"Something wrong with tts(lan={lan}, msg={msg})\t-> Exception: {e}", True, type="Error")
+# ____----Text to voice----____
+
+# ----____Config____----
+# Change config with command :D
+# Usage: $config help
+
+@client.command(pass_context=True, name="config")
+async def _config(ctx, text):
+    await ctx.send()
+
+
+# ____----Text to voice----____
 
 ##+##+##+##+##+##+##+##+##+##+##+##+##+##+##+##+##
 # DO NOT ADD/CHANGE ANYTHING UNDER THIS LINE!
@@ -79,7 +145,8 @@ if __name__ == '__main__':
         '$' is default prefix command
     ***********************************
     """
+    logs.newLine("\n**********************************************************\n")
     logs.log("Run SalmanBot", False, "START")
-    logs.log(msg, True, "START")   
+    logs.log(msg, True, "START", saveInLog = False)   
     
     runDiscord.run()

@@ -4,7 +4,8 @@ class Logs():
         self.path = f"{path}logs.txt"
         self.name = f"<{name}> " if name else ""
 
-    def log(self, action, printCmd = False, type = "Info", name = '__defaultName__'):
+    def log(self, action, printCmd = False, type = "Info", saveInLog = True, name = '__defaultName__'):
+        """Create new log"""
         try:
             dt_string = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
         except Exception as e:
@@ -17,14 +18,25 @@ class Logs():
         action = f"{name}{dt_string} | {type} | {action}"
 
         # Save action to log file
+        if saveInLog:
+            try:
+                f = open(self.path, "a", encoding="utf-8")
+                f.write(f"{action}\n")
+                f.close()
+            except Exception as e:
+                print(f"(Logs can not run) Make sure you select correct path\n{e}")
+                return False
+
+        if printCmd:
+            print(action)
+        return True
+    
+    def newLine(self, text = "\n"):
         try:
             f = open(self.path, "a")
-            f.write(f"{action}\n")
+            f.write(f"{text}")
             f.close()
         except Exception as e:
             print(f"(Logs can not run) Make sure you select correct path\n{e}")
             return False
-
-        if printCmd:
-            print(action)
         return True
