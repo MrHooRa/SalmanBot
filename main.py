@@ -3,9 +3,9 @@ SalmanBot - BETA!
 -----------------
 This discord bot can do:-
     1) Reddit new upvote posts
-    2) Wheel
-    3) TTS (Text To Speech)
-    4) Special commands
+    2) Wheel - DONE
+    3) TTS (Text To Speech) - DONE
+    4) Special commands (clear)
     5) Math equations
 
 ===== Check these websites for more info =====
@@ -20,6 +20,9 @@ This discord bot can do:-
 
 # https://repl.it/@JunkE/sDB#main.py
 # https://uptimerobot.com/
+
+# https://discordpy.readthedocs.io/en/stable/index.html
+# https://github.com/Rapptz/discord.py/tree/v1.7.3/examples
 
 """
 
@@ -39,7 +42,7 @@ from decouple import config
 
 # Discord packages
 import discord
-from discord import FFmpegPCMAudio
+# from discord import FFmpegPCMAudio
 
 # Calcualte mp3 file size (seconds)
 import eyed3
@@ -55,7 +58,7 @@ logger.addHandler(handler)
 
 logs = Logs(name='main.py')
 
-# V=================== Database details ===================V #
+# V=================== Database details (For Reddit) ===================V #
 dataBase = (config('DB_HOSTNAME'), 
             config('DB_USERNAME'),
             config('DB_PASSWORD'), 
@@ -64,11 +67,10 @@ dataBase = (config('DB_HOSTNAME'),
 
 
 # V=================== Discord details ==================V #
-runDiscord = runDiscord.runDiscord(config('TOKEN'))
+rd = runDiscord.runDiscord(config('TOKEN'))
 
-client = runDiscord.getClient()
+client = rd.bot_client()
 # ^=====================================================^ #
-
 
 
 @client.event
@@ -77,17 +79,11 @@ async def on_ready():
     logs.log("SalmanBot is ready :D", True)
 # 000000000000000000000
 
-@client.command(pass_context=True, name="hello")
-async def _test(ctx):
-    """Reply command"""
-    await ctx.reply('Hi!', mention_author=True)
-        
-
 # ----____Text to voice____----
 # text -> voice :D
 # Usage: $tts lang text
 
-@client.command(pass_context=True, name="tts")
+@client.command(pass_context=True, name="tts", hidden=True)
 async def _tts(ctx, lan, *msg):
     logMsg = " ".join(msg)
     msg = "".join(msg)
@@ -109,18 +105,18 @@ async def _tts(ctx, lan, *msg):
         await vc.disconnect()
 
         await ctx.reply('تم يا وحش', mention_author=True)
-        
+
         # log
-        logs.log(f"Played (Lan: {lan}, Msg: {logMsg})", True, type="command")
+        logs.log(f"Played (Lan: {lan}, Msg: {logMsg})", True, type="command", author=ctx.author.name)
     except Exception as e:
         await ctx.reply('رجاءً إختر اللغة', mention_author=True)
-        logs.log(f"Something wrong with tts(lan={lan}, msg={msg})\t-> Exception: {e}", True, type="Error")
+        logs.log(f"Something wrong with tts(lan={lan}, msg={msg})\t-> Exception: {e}", True, type="Error", author=ctx.author.name)
 # ____----Text to voice----____
 
 # ----____Random Wheel____----
 # get random with animation
 
-@client.command(pass_context=True, name="wheelV")
+@client.command(pass_context=True, name="wheel", hidden=True)
 async def _wheel(ctx, *arr):
     getWinner = arr[random.randint(0, (len(arr) - 1))]
     msg = await ctx.channel.send(f"The winner is {getWinner}...")
@@ -137,26 +133,36 @@ async def _wheel(ctx, *arr):
 @client.command(pass_context=True, name="clear")
 async def _clear(ctx, amount=5):
     await ctx.channel.purge(limit=(amount+1))
-    logs.log(f"Clear chat (Channel: {ctx.channel.name}, amount: {amount})", True, type="command")
+    logs.log(f"Clear chat (Channel: {ctx.channel.name}, amount: {amount})", True, type="command", author=ctx.author.name)
 # ____----Clear channel chat----____
 
-##+##+##+##+##+##+##+##+##+##+##+##+##+##+##+##+##
-# DO NOT ADD/CHANGE ANYTHING UNDER THIS LINE!
-##+##+##+##+##+##+##+##+##+##+##+##+##+##+##+##+##
-# RUN THE BOT!
-if __name__ == '__main__':
-    msg = """
+#00000000000000000000000Test Area0000000000000000000000000
+@client.command(pass_context=True, name="test1", hidden=True)
+async def _test(ctx, a):
+    if rd.bot_prefix(a, author=ctx.author.name):
+        await ctx.reply('تم التغيير بنجاح!', mention_author=True)
+    else:
+        await ctx.reply("Error!", mention_author=True)
+#000000000000000000000000000000000000000000000000000000000
+
+
+msg = f"""
     ***********************************
             SalmanBot - Beta
     https://github.com/MrHooRa/SalmanBot
             ----------------
         
         Running in Python 3.9.6
-        '$' is default prefix command
+        '{rd.bot_prefix()}' is default prefix command
     ***********************************
     """
+##+##+##+##+##+##+##+##+##+##+##+##+##+##+##+##+##
+# DO NOT ADD/CHANGE/REMOVE ANYTHING UNDER THIS LINE!
+##+##+##+##+##+##+##+##+##+##+##+##+##+##+##+##+##
+# RUN THE BOT!
+if __name__ == '__main__':
     logs.newLine("\n**********************************************************\n")
     logs.log("Run SalmanBot", False, "START")
     logs.log(msg, True, "START", saveInLog = False)   
     
-    runDiscord.run()
+    rd.run()
