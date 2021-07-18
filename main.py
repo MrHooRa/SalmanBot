@@ -27,26 +27,34 @@ This discord bot can do:-
 # Defualt packages
 import os, asyncio, random
 
+# Get env values
+from decouple import config
+
 # Discord packages
 import discord
 from discord.ext import commands
 
 # V=================== Database details ===================V #
-dataBase = (os.getenv('DB_HOSTNAME'), 
-            os.getenv('DB_USERNAME'),
-            os.getenv('DB_PASSWORD'), 
-            os.getenv('DB_NAME'))
-
-print(dataBase)
+dataBase = (config('DB_HOSTNAME'), 
+            config('DB_USERNAME'),
+            config('DB_PASSWORD'), 
+            config('DB_NAME'))
 # ^=====================================================^ #
-
-
 
 
 # V=================== Discord details ==================V #
 # Discord token
-TOKEN = os.getenv('TOKEN')
+TOKEN = config('TOKEN')
 
 # Set prefix (dollr sign or anything you want :D)
 client = commands.Bot(command_prefix="$")
 # ^=====================================================^ #
+
+
+
+
+##+##+##+##+##+##+##+##+##+##+##+##+##+##+##+##+##
+# DO NOT ADD ANYTHING UNDER THIS LINE!
+##+##+##+##+##+##+##+##+##+##+##+##+##+##+##+##+##
+# RUN THE BOT!
+client.run(TOKEN)
