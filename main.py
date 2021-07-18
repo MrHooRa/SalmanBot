@@ -72,6 +72,7 @@ if __name__ == '__main__':
     msg = """
     ***********************************
             SalmanBot - Beta
+    https://github.com/MrHooRa/SalmanBot
             ----------------
         
         Running in Python 3.9.6
