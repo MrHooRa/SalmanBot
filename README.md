@@ -1,3 +1,7 @@
 # SalmanBot - BETA!
-This bot can post any upvote posts from specific user in reddit!
-and do a lot of thigns like (Wheel, TTS, etc...)
+This bot can do:-
+* 1) Share new reddit upvote posts
+* 2) Wheel
+* 3) TTS (Text To Speech)
+* 4) Special commands
+* 5) Math equations
