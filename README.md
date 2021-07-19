@@ -15,7 +15,7 @@ New:
 - New commands structure and create sb_commands.py contains all commands used by discord users.
 - Add corg system to main.py.
 
-Updat:
+Update:
 -
 - tts command work perfect. Bot will leave after end of speech immediately.
 
