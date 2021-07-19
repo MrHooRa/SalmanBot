@@ -1,6 +1,4 @@
 import sys
-
-from discord import mentions
 sys.path.append("class")
 
 from logs import *
@@ -12,7 +10,6 @@ from gtts import gTTS
 
 # Calcualte mp3 file size (seconds)
 import eyed3
-
 
 class SB_Commands(commands.Cog):
     """This class contains all commands that are used in discord by users"""
@@ -63,7 +60,6 @@ class SB_Commands(commands.Cog):
         except Exception as e:
             await ctx.reply('الرجاء إختيار رمز لغة صحيح!', mention_author=True)
             self.logs.log(f"Something wrong with tts(lan={lan}, msg={msg})\t-> Exception: {e}", True, type="Error", author=ctx.author.name)
-
 
     @commands.command(pass_context=True, name="wheel", help="- Get random winner")
     async def _wheel(self, ctx, *arr):
