@@ -4,7 +4,7 @@ class Logs():
         self.path = f"{path}logs.txt"
         self.name = f"<{name}> " if name else ""
 
-    def log(self, action, printCmd = False, type = "Info", saveInLog = True, name = '__defaultName__', author = "Bot"):
+    def log(self, action, printCmd = False, type = "Info", saveInLog = True, name = '__default__', author = "Bot"):
         """Create new log"""
         try:
             dt_string = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
@@ -12,10 +12,10 @@ class Logs():
             print(f"(Logs can not run) Please make sure datetime is installed!\n{e}")
             return False
 
-        name = self.name if name == '__defaultName__' else name
+        name = self.name if name == '__default__' else name
 
         # log format
-        action = f"{name}{dt_string} | {type} | {author} | {action}"
+        action = f"{name}\t{dt_string} | {type} | {author} | {action}"
 
         # Save action to log file
         if saveInLog:
