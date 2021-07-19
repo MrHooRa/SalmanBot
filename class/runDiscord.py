@@ -16,6 +16,8 @@ class runDiscord():
 
         intents = discord.Intents.default()
         intents.members = True
+        intents.reactions = True
+        intents.guilds = True
 
         try:
             self.client = commands.Bot(command_prefix="$", intents=intents, description=description)
@@ -32,9 +34,9 @@ class runDiscord():
             return self.prefix
         else:
             try:
-                self.logs.log(f"Set new prefix ({self.prefix}) -> ({setPrefix})", True, type="command", author=author)
+                self.client.command_prefix = setPrefix
+                self.logs.log(f"Set new prefix ({self.prefix}) -> ({setPrefix})", True, author=author)
                 self.prefix = str(setPrefix)
-                self.client.command_prefix = self.prefix
                 return True
             except Exception as e:
                 self.logs.log("Error while change bot_prefix", True, "Error", author=author)
@@ -45,9 +47,9 @@ class runDiscord():
         if setDescription == "__defualt__":
             return self.description
         else:
+            self.client.description = setDescription
             self.logs.log(f"Set new description ({self.description}) -> ({setDescription})", True, type="command", author=author)
             self.description = str(setDescription)
-            self.client.description = self.description
             return self.description
 
     def run(self):
@@ -55,5 +57,14 @@ class runDiscord():
         try:
             self.logs.log("client running...", True, "Info")
             self.client.run(self.TOKEN)
+            return True
         except Exception as e:
-            self.logs.log(f"Cannot run discord bot. Make sure you put correct/valid token!\n{e}\n", True, type="Erorr")
+            self.logs.log(f"Cannot run discord bot. -> Exception: {e}\n", True, type="Erorr")
+            return False
+            
+    def add_cog(self, className):
+        """Add cog to bot"""
+        try:
+            self.client.add_cog(className)
+        except Exception as e:
+            pass
