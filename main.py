@@ -36,19 +36,14 @@ import logging
 # my classes
 import runDiscord
 from logs import *
+from sb_commands import SB_Commands
 
 # Get env values
 from decouple import config
 
 # Discord packages
 import discord
-# from discord import FFmpegPCMAudio
 
-# Calcualte mp3 file size (seconds)
-import eyed3
-
-# Transorm from text --> voice
-from gtts import gTTS
 
 logger = logging.getLogger('discord')
 logger.setLevel(logging.DEBUG)
@@ -67,7 +62,7 @@ dataBase = (config('DB_HOSTNAME'),
 
 
 # V=================== Discord details ==================V #
-rd = runDiscord.runDiscord(config('TOKEN'))
+rd = runDiscord.runDiscord(config('TOKEN'), description="[!] SalmanBot - Beta")
 
 client = rd.bot_client()
 # ^=====================================================^ #
@@ -76,65 +71,12 @@ client = rd.bot_client()
 @client.event
 async def on_ready():
     logs.log(f"Logged in as (Name: {client.user.name}, ID: {client.user.id})", True)
-    logs.log("SalmanBot is ready :D", True)
 # 000000000000000000000
 
-# ----____Text to voice____----
-# text -> voice :D
-# Usage: $tts lang text
 
-@client.command(pass_context=True, name="tts", hidden=True)
-async def _tts(ctx, lan, *msg):
-    logMsg = " ".join(msg)
-    msg = "".join(msg)
-    # Create mp3 voice and play it in discord
-    try:    
-        myObj = gTTS(text=msg, lang=lan)
-        myObj.save("mp3/audio.mp3")
 
-        # Calculate mp3 size (x seconds)
-        duration = eyed3.load('mp3/audio.mp3').info.time_secs
 
-        # Play
-        channel = ctx.message.author.voice.channel
-        vc = await channel.connect()
-        vc.play(discord.FFmpegPCMAudio('mp3/audio.mp3'))
 
-        # Disconnected from channel after x seconds
-        await asyncio.sleep((duration + 0.11))
-        await vc.disconnect()
-
-        await ctx.reply('تم يا وحش', mention_author=True)
-
-        # log
-        logs.log(f"Played (Lan: {lan}, Msg: {logMsg})", True, type="command", author=ctx.author.name)
-    except Exception as e:
-        await ctx.reply('رجاءً إختر اللغة', mention_author=True)
-        logs.log(f"Something wrong with tts(lan={lan}, msg={msg})\t-> Exception: {e}", True, type="Error", author=ctx.author.name)
-# ____----Text to voice----____
-
-# ----____Random Wheel____----
-# get random with animation
-
-@client.command(pass_context=True, name="wheel", hidden=True)
-async def _wheel(ctx, *arr):
-    getWinner = arr[random.randint(0, (len(arr) - 1))]
-    msg = await ctx.channel.send(f"The winner is {getWinner}...")
-
-    for _ in range(4):
-        await asyncio.sleep(0.05)
-        await msg.edit(content=f"The winner is {arr[random.randint(0, (len(arr) - 1))]}...")
-    await msg.edit(content=f"The winner is {getWinner} :D")
-# ____----Random Wheel----____
-
-# ----____Clear channel chat____----
-# (defualt = 5)
-
-@client.command(pass_context=True, name="clear")
-async def _clear(ctx, amount=5):
-    await ctx.channel.purge(limit=(amount+1))
-    logs.log(f"Clear chat (Channel: {ctx.channel.name}, amount: {amount})", True, type="command", author=ctx.author.name)
-# ____----Clear channel chat----____
 
 #00000000000000000000000Test Area0000000000000000000000000
 @client.command(pass_context=True, name="test1", hidden=True)
@@ -146,6 +88,14 @@ async def _test(ctx, a):
 #000000000000000000000000000000000000000000000000000000000
 
 
+
+# Cogs
+try:
+    rd.add_cog(SB_Commands(client))
+except Exception as e:
+    logs.log("SalmanBot NOT READY. -> Exception: {e}")
+    
+
 msg = f"""
     ***********************************
             SalmanBot - Beta
@@ -153,7 +103,8 @@ msg = f"""
             ----------------
         
         Running in Python 3.9.6
-        '{rd.bot_prefix()}' is default prefix command
+        Discord version {discord.__version__}
+        Defualt prefix ({rd.bot_prefix()})
     ***********************************
     """
 ##+##+##+##+##+##+##+##+##+##+##+##+##+##+##+##+##
@@ -162,7 +113,7 @@ msg = f"""
 # RUN THE BOT!
 if __name__ == '__main__':
     logs.newLine("\n**********************************************************\n")
-    logs.log("Run SalmanBot", False, "START")
-    logs.log(msg, True, "START", saveInLog = False)   
-    
-    rd.run()
+    logs.log("Run SalmanBot", False)
+    logs.log(msg, True, saveInLog = False)
+    if rd.run():
+        logs.log("SalmanBot is ready!", True)
