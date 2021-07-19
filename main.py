@@ -26,7 +26,20 @@ This discord bot can do:-
 
 """
 
+BOT_DETAILS = {
+    'name':         "SalmanBot",
+    'author':       "Salman, MrHora",
+    'github':       "https://github.com/MrHooRa",
+    'bot_github':   "https://github.com/MrHooRa/SalmanBot",
+    'verison':      "0.1",
+    'default_prefix': "%",
+    'python_version': "3.9.6"
+}
+
+
 import sys
+
+from discord import guild
 sys.path.append("class")
 
 # Defualt packages
@@ -37,13 +50,15 @@ import logging
 import runDiscord
 from logs import *
 from sb_commands import SB_Commands
+from sb_tasks import SB_Tasks
 
 # Get env values
 from decouple import config
 
 # Discord packages
 import discord
-
+from discord import VoiceChannel
+from discord.ext import tasks
 
 logger = logging.getLogger('discord')
 logger.setLevel(logging.DEBUG)
@@ -51,7 +66,7 @@ handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w'
 handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
 logger.addHandler(handler)
 
-logs = Logs(name='main.py')
+logs = Logs(name='main.py', tabs=2)
 
 # V=================== Database details (For Reddit) ===================V #
 dataBase = (config('DB_HOSTNAME'), 
@@ -62,21 +77,16 @@ dataBase = (config('DB_HOSTNAME'),
 
 
 # V=================== Discord details ==================V #
-rd = runDiscord.runDiscord(config('TOKEN'), description="[!] SalmanBot - Beta")
-
+rd = runDiscord.runDiscord(config('TOKEN'), description=f"[!] {BOT_DETAILS['name']} {BOT_DETAILS['verison']}", prefix=BOT_DETAILS['default_prefix'])
 client = rd.bot_client()
+client.command_prefix = BOT_DETAILS['default_prefix']
 # ^=====================================================^ #
 
-
+# Bot on_ready
 @client.event
 async def on_ready():
+    tempChannel.start()
     logs.log(f"Logged in as (Name: {client.user.name}, ID: {client.user.id})", True)
-# 000000000000000000000
-
-
-
-
-
 
 #00000000000000000000000Test Area0000000000000000000000000
 @client.command(pass_context=True, name="test1", hidden=True)
@@ -87,22 +97,65 @@ async def _test(ctx, a):
         await ctx.reply("Error!", mention_author=True)
 #000000000000000000000000000000000000000000000000000000000
 
+corrent_tempChannels = []
+# categoryTemp = 864650793655337011
+categoryTemp = 866660422282379274
+
+@tasks.loop(seconds=1)
+async def tempChannel():
+    try:
+        for channel in corrent_tempChannels:
+            memChannel = []
+            for member in channel.members:
+                memChannel.append(member)
+            if len(memChannel) == 0 :
+                logs.log(f"Channel removed (channel name: {channel.name})", True)
+                await channel.delete()
+                corrent_tempChannels.remove(channel)
+
+    except Exception as e:
+        logs.log(f"Can not delete channel. Exception -> {e}", True)
+
+    try:
+        tempChannel = client.get_channel(865306754446131210)
+        members = tempChannel.members
+        guild = client.get_guild(603958784230162442)
+        categories = guild.categories
+
+        for cg in categories:
+            if cg.id == categoryTemp:
+                categoy = cg
+
+        for member in members:
+            channel_details = {
+                'name': f"{member.name} Channel",
+                'category': categoy
+            }
+
+            createdChannel = await guild.create_voice_channel(channel_details['name'], category=channel_details['category'])
+            await member.move_to(createdChannel)
+            corrent_tempChannels.append(createdChannel)
+            logs.log(f"Create new channel for {member.name} in {channel_details['category']} categoy", True)
+
+    except Exception as e:
+        logs.log(f"Can not create new temp channel. Exception -> {e}", True)
 
 
 # Cogs
 try:
     rd.add_cog(SB_Commands(client))
+    rd.add_cog(SB_Tasks(client))
 except Exception as e:
-    logs.log("SalmanBot NOT READY. -> Exception: {e}")
+    logs.log(f"{BOT_DETAILS['name']} NOT READY. -> Exception: {e}")
     
 
 msg = f"""
     ***********************************
-            SalmanBot - Beta
-    https://github.com/MrHooRa/SalmanBot
+            {BOT_DETAILS['name']} {BOT_DETAILS['verison']}
+    {BOT_DETAILS['bot_github']}
             ----------------
         
-        Running in Python 3.9.6
+        Running in Python {BOT_DETAILS['python_version']}
         Discord version {discord.__version__}
         Defualt prefix ({rd.bot_prefix()})
     ***********************************
@@ -115,5 +168,4 @@ if __name__ == '__main__':
     logs.newLine("\n**********************************************************\n")
     logs.log("Run SalmanBot", False)
     logs.log(msg, True, saveInLog = False)
-    if rd.run():
-        logs.log("SalmanBot is ready!", True)
+    rd.run()
