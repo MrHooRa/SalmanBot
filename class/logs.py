@@ -1,8 +1,9 @@
 from datetime import datetime
 class Logs():
-    def __init__(self, path='', name = ""):
-        self.path = f"{path}logs.txt"
+    def __init__(self, path='', name = "", tabs=1):
+        self.path = f"{path}logs.log"
         self.name = f"<{name}> " if name else ""
+        self.tabs = tabs
 
     def log(self, action, printCmd = False, type = "Info", saveInLog = True, name = '__default__', author = "Bot"):
         """Create new log"""
@@ -15,7 +16,11 @@ class Logs():
         name = self.name if name == '__default__' else name
 
         # log format
-        action = f"{name}\t{dt_string} | {type} | {author} | {action}"
+        tab = []
+        for _ in range(self.tabs):
+            tab.append("\t")
+        tab = "".join(tab)
+        action = f"{name}{tab}{dt_string} | {type} | {author} | {action}"
 
         # Save action to log file
         if saveInLog:
