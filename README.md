@@ -1,6 +1,6 @@
 # SalmanBot - BETA! :smiley:
 
-This bot working in python 3.9.6 and Discord version 1.7.3
+This bot working in python 3.9.6+ and Discord version 1.7.3
 
 What this bot can do:grey_question:
 -
