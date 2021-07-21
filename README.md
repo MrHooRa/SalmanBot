@@ -12,7 +12,7 @@ What this bot can do:grey_question:
 
 New:
 -
-- New commands structure and create sb_commands.py contains all commands used by discord users.
+- New commands structure and create commands.py contains all commands used by discord users.
 - Add corg system to main.py.
 - New temp channel task.
 
