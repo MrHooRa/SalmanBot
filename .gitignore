@@ -6,3 +6,9 @@ mp3/bot_tts.mp3
 logs.log
 __pycache__/sb_commands.cpython-39.pyc
 __pycache__/sb_tasks.cpython-39.pyc
+class/__pycache__/commands.cpython-39.pyc
+class/__pycache__/logs.cpython-39.pyc
+class/__pycache__/runDiscord.cpython-39.pyc
+class/__pycache__/sb_commands.cpython-39.pyc
+class/__pycache__/sb_tasks.cpython-39.pyc
+class/__pycache__/tasks.cpython-39.pyc
