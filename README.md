@@ -1,16 +1,20 @@
-# SalmanBot - BETA! :smiley:
+# SalmanBot 0.1v :smiley:
 
 ▶️ This bot working in python 3.9.6+ and Discord version 1.7.3
 
 ▶️ My twitter: @MrHoora
 
-What this bot can do:grey_question:
+:heavy_check_mark: What this bot can do?
 -
-* Temp channels :heavy_check_mark:
-* Share new reddit upvote posts
-* TTS (Text To Speech) :heavy_check_mark:
-* Special commands (Clear, Wheel) :heavy_check_mark:
-* Math equations
+* Temp channels 
+* TTS (Text To Speech)
+* Special commands (Clear, Wheel)
+
+⭐ Upcoming features:
+-
+- Statistics reports & data visualization by using online database.
+- Math equations.
+- Share new reddit upvote posts
 
 📎 Updates:
 -
@@ -18,7 +22,7 @@ What this bot can do:grey_question:
 - Add corg system to main.py.
 - New temp channel task.
 - tts command work perfect. Bot will leave after end of speech immediately.
-- Now, temp channel admin can manage channel (Edit chanel name, limit and delete it!).
+- Temp channel admin can manage channel (Edit chanel name, limit and delete it!).
 
 🧰 Fixes:
 -
