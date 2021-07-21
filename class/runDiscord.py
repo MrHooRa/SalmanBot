@@ -1,6 +1,3 @@
-import sys
-sys.path.append("class")
-
 # Packages
 import discord
 from discord.ext import commands
@@ -20,15 +17,18 @@ class runDiscord():
         intents.guilds = True
 
         try:
+            # Create client
             self.client = commands.Bot(command_prefix="$", intents=intents, description=description)
+        
+        #TODO: Choose correct Exception!
         except Exception as e:
             self.logs.log("\"runDiscord.py\" cannot init\n{e}\n", True, type="Error")
         
-    def bot_client(self):
+    def _client(self):
         """Get client"""
         return self.client
 
-    def bot_prefix(self, setPrefix="__defualt__", author="Bot"):
+    def _prefix(self, setPrefix="__defualt__", author="Bot"):
         """Get prefix or set new one"""
         if setPrefix == "__defualt__":
             return self.prefix
@@ -42,7 +42,7 @@ class runDiscord():
                 self.logs.log("Error while change bot_prefix", True, "Error", author=author)
                 return False
 
-    def bot_description(self, setDescription = "__defualt__", author="Bot"):
+    def _description(self, setDescription = "__defualt__", author="Bot"):
         """Get description or set new one"""
         if setDescription == "__defualt__":
             return self.description
@@ -67,4 +67,4 @@ class runDiscord():
         try:
             self.client.add_cog(className)
         except Exception as e:
-            pass
+            self.logs.log(f"add_cog did not work. Exception: {e}")
