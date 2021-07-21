@@ -28,6 +28,8 @@ class Logs():
                 f = open(self.path, "a", encoding="utf-8")
                 f.write(f"{action}\n")
                 f.close()
+            
+            #TODO: Choose correct Exception!
             except Exception as e:
                 print(f"(Logs can not run) Make sure you select correct path\n{e}")
                 return False
