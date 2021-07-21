@@ -4,3 +4,5 @@ logs.txt
 mp3/audio.mp3
 mp3/bot_tts.mp3
 logs.log
+__pycache__/sb_commands.cpython-39.pyc
+__pycache__/sb_tasks.cpython-39.pyc
