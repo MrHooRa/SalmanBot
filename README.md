@@ -23,4 +23,5 @@ Update:
 
 Fix:
 -
-- Temp channel method now work with no errors (In the past, user will face error when delete channel by its own side!)
+- Temp channel method now work with no errors (In the past, user will face error when delete channel by its own side!).
+- SalmanBot will reply to member when used tts while it's not in voice channel.
