@@ -1,6 +1,8 @@
 # SalmanBot - BETA! :smiley:
 
-This bot working in python 3.9.6+ and Discord version 1.7.3
+▶️ This bot working in python 3.9.6+ and Discord version 1.7.3
+
+▶️ My twitter: @MrHoora
 
 What this bot can do:grey_question:
 -
@@ -10,18 +12,18 @@ What this bot can do:grey_question:
 * Special commands (Clear, Wheel) :heavy_check_mark:
 * Math equations
 
-New:
+💠 New: 
 -
 - New commands structure and create commands.py contains all commands used by discord users.
 - Add corg system to main.py.
 - New temp channel task.
 
-Update:
+📎 Updates:
 -
 - tts command work perfect. Bot will leave after end of speech immediately.
 - Now, temp channel admin can manage channel (Edit chanel name, limit and delete it!).
 
-Fix:
+🧰 Fixes:
 -
 - Temp channel method now work with no errors (In the past, user will face error when delete channel by its own side!).
 - SalmanBot will reply to member when used tts while it's not in voice channel.
