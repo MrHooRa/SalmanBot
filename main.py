@@ -33,24 +33,31 @@ BOT_DETAILS = {
     'bot_github':   "https://github.com/MrHooRa/SalmanBot",
     'verison':      "0.1",
     'default_prefix': "%",
-    'python_version': "3.9.6"
+    'python_version': "3.9.6",
+    'guild_id': 603958784230162442,
+    'temp_channel_id': 867471772441903135,
+    'temp_channel_category': 866660422282379274,
+    'temp_channel_name': "$MEMBER_NAME$ Channel",         # Use $MEMBER_NAME$ for member name
 }
 
+# DO NOT EDIT THIS!
+BOT_ATT = {
+    'guild': None,
+    'temp_channel_category': None
+}
 
 import sys
-
-from discord import guild
-sys.path.append("class")
 
 # Defualt packages
 import os, asyncio, random
 import logging
 
-# my classes
+# SalmnBot classes
+sys.path.append("class")
 import runDiscord
 from logs import *
-from sb_commands import SB_Commands
-from sb_tasks import SB_Tasks
+from commands import Commands
+from tasks import Tasks
 
 # Get env values
 from decouple import config
@@ -78,7 +85,7 @@ dataBase = (config('DB_HOSTNAME'),
 
 # V=================== Discord details ==================V #
 rd = runDiscord.runDiscord(config('TOKEN'), description=f"[!] {BOT_DETAILS['name']} {BOT_DETAILS['verison']}", prefix=BOT_DETAILS['default_prefix'])
-client = rd.bot_client()
+client = rd._client()
 client.command_prefix = BOT_DETAILS['default_prefix']
 # ^=====================================================^ #
 
@@ -88,65 +95,94 @@ async def on_ready():
     tempChannel.start()
     logs.log(f"Logged in as (Name: {client.user.name}, ID: {client.user.id})", True)
 
+    # Set guild
+    BOT_ATT['guild'] = client.get_guild(BOT_DETAILS['guild_id'])
+
+    # Set temp category
+    categories = BOT_ATT['guild'].categories
+
+    # Searh on category
+    for cg in categories:
+        if cg.id == BOT_DETAILS['temp_channel_category']:
+            BOT_ATT['temp_channel_category'] = cg
+            break
+
 #00000000000000000000000Test Area0000000000000000000000000
 @client.command(pass_context=True, name="test1", hidden=True)
 async def _test(ctx, a):
-    if rd.bot_prefix(a, author=ctx.author.name):
+    if rd._prefix(a, author=ctx.author.name):
         await ctx.reply('تم التغيير بنجاح!', mention_author=True)
     else:
         await ctx.reply("Error!", mention_author=True)
 #000000000000000000000000000000000000000000000000000000000
 
+# TEMP CHANNELS
+
+#TODO: Take this function to tasks.py or tempChannel.py
+#TODO: Store all temp channel to corrent            #DONE
+#TODO: Make new command for temp channel memnber to kick another member from it own channel (Something like: $dc @member)
+
 corrent_tempChannels = []
-# categoryTemp = 864650793655337011
-categoryTemp = 866660422282379274
+# corrent_tempChannel:
+#   [..], <- Temp channel array
+#   [
+#    channel_name,
+#    category,
+#    member
+#   ]
 
 @tasks.loop(seconds=1)
 async def tempChannel():
+    """Make temp channel and move member to it. When all members leave the channel, it'l deleted"""
     try:
         for channel in corrent_tempChannels:
             memChannel = []
-            for member in channel.members:
+            for member in channel[0].members:
                 memChannel.append(member)
             if len(memChannel) == 0 :
-                logs.log(f"Channel removed (channel name: {channel.name})", True)
-                await channel.delete()
+                logs.log(f"Channel removed (channel name: {channel[0].name}, Category: {channel[2].name}, Member ID: {channel[2].id})", True)
+                await channel[0].delete()
                 corrent_tempChannels.remove(channel)
 
+    # If channel not found (Most likely member deleted its own channel)
+    except discord.NotFound as e_NF:
+        corrent_tempChannels.remove(channel)
+
     except Exception as e:
-        logs.log(f"Can not delete channel. Exception -> {e}", True)
+        logs.log(f"Can not delete channel. Exception -> {e}", True, type="Error")
 
     try:
-        tempChannel = client.get_channel(865306754446131210)
+        # Get Temp channel ID
+        tempChannel = client.get_channel(BOT_DETAILS['temp_channel_id'])
         members = tempChannel.members
-        guild = client.get_guild(603958784230162442)
-        categories = guild.categories
-
-        for cg in categories:
-            if cg.id == categoryTemp:
-                categoy = cg
-
+        
+        # For all members in temp channel
         for member in members:
-            channel_details = {
-                'name': f"{member.name} Channel",
-                'category': categoy
-            }
+            tempChannelName = BOT_DETAILS['temp_channel_name'].replace("$MEMBER_NAME$", member.name)
 
-            createdChannel = await guild.create_voice_channel(channel_details['name'], category=channel_details['category'])
+            # Create new temp channel and move user to it!
+            createdChannel = await BOT_ATT['guild'].create_voice_channel(tempChannelName, category=BOT_ATT['temp_channel_category'])
             await member.move_to(createdChannel)
-            corrent_tempChannels.append(createdChannel)
-            logs.log(f"Create new channel for {member.name} in {channel_details['category']} categoy", True)
+
+            # Set permission (manage_channels) to user
+            await createdChannel.set_permissions(member, manage_channels=True, move_members=True)
+
+            # Insert new temp channel details to corrent_tempChannels array
+            corrent_tempChannels.append([createdChannel, BOT_ATT['temp_channel_category'], member])
+
+            # For log
+            logs.log(f"Create new channel (Channel name: {tempChannelName}, Catrgory: {BOT_ATT['temp_channel_category']}, Member ID: {member.id})", True)
 
     except Exception as e:
-        logs.log(f"Can not create new temp channel. Exception -> {e}", True)
+        logs.log(f"Can not create new temp channel. Exception -> {e}", True, type='Error')
 
 
 # Cogs
 try:
-    rd.add_cog(SB_Commands(client))
-    rd.add_cog(SB_Tasks(client))
+    rd.add_cog(Commands(client))
+    rd.add_cog(Tasks(client))
 except Exception as e:
-    logs.log(f"{BOT_DETAILS['name']} NOT READY. -> Exception: {e}")
+    logs.log(f"{BOT_DETAILS['name']} NOT READY. -> Exception: {e}", True, type="Error")
     
 
 msg = f"""
@@ -157,13 +193,11 @@ msg = f"""
         
         Running in Python {BOT_DETAILS['python_version']}
         Discord version {discord.__version__}
-        Defualt prefix ({rd.bot_prefix()})
+        Defualt prefix ({rd._prefix()})
     ***********************************
     """
 ##+##+##+##+##+##+##+##+##+##+##+##+##+##+##+##+##
-# DO NOT ADD/CHANGE/REMOVE ANYTHING UNDER THIS LINE!
-##+##+##+##+##+##+##+##+##+##+##+##+##+##+##+##+##
-# RUN THE BOT!
+
 if __name__ == '__main__':
     logs.newLine("\n**********************************************************\n")
     logs.log("Run SalmanBot", False)
