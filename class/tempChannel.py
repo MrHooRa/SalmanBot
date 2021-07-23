@@ -2,6 +2,8 @@ from discord.ext import tasks, commands
 import discord
 from logs import *
 
+#TODO: Save all temp channels in file.txt
+
 class TempChannels(commands.Cog):
     """Create temp channel and give member permission to manage it"""
     
