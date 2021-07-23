@@ -1,3 +1,5 @@
+from sys import prefix
+from discord import client
 from logs import *
 from discord.ext import commands
 import discord, asyncio, random
@@ -8,8 +10,9 @@ from gtts import gTTS
 class Commands(commands.Cog):
     """This class contains all commands that are used in discord by members"""
     
-    def __init__(self, bot):
+    def __init__(self, bot ,rd):
         self.bot = bot
+        self.rd = rd
         self.logs = Logs(name='commands.py', tabs=2)
 
     @commands.Cog.listener()
@@ -59,7 +62,7 @@ class Commands(commands.Cog):
             await ctx.reply('الرجاء إختيار رمز لغة صحيح!', mention_author=True)
             self.logs.log(f"Something wrong with tts(lan={lan}, msg={msg})\t-> Exception: {e}", True, type="Error", author=ctx.author.name)
 
-    @commands.command(pass_context=True, name="wheel", help="- Get random winner")
+    @commands.command(pass_context=True, name="wheel", help="- Get random winner\tUsage: %wheel obj1 obj2 ...")
     async def _wheel(self, ctx, *arr):
         """
         TODO: Fix this shit. Fahad want put qumma.
@@ -73,11 +76,11 @@ class Commands(commands.Cog):
             await asyncio.sleep(0.05)
             await msg.edit(content=f"The winner is {arr[random.randint(0, (len(arr) - 1))]}...")
         await msg.edit(content=f"The winner is {getWinner} :D")
-
-    @commands.command(pass_context=True, name="clear")
+    
+    @commands.command(pass_context=True, name="clear", help = "- Clear text\tUsage %clear amount")
     async def _clear(self, ctx, amount=5):
         """
-        Clear text channel
+        Clear text in channel
         Usage: $clear n     -> n = is optional!
         By default n = 5
         """
@@ -87,3 +90,17 @@ class Commands(commands.Cog):
         msg = await ctx.send(f"تم مسح {amount} من الرسائل!")
         await asyncio.sleep(2)
         await msg.delete()
+
+    @commands.command(pass_context=True, name="prefix", hidden=True)
+    @commands.has_role(603960582584139798) # For Admins only!
+    async def _prefix(self, ctx, newPrefix: str):
+        """Change bot prefix"""
+        if self.rd._prefix(newPrefix, author=ctx.author.name):
+            await ctx.author.send(f'Prefix changed to {newPrefix} successfully!')
+        else:
+            await ctx.author.send('Did not change prefix!')
+    
+    @commands.Cog.listener()
+    async def on_command_error(self, ctx, error):
+        if isinstance(error, commands.BotMissingRole):
+            await ctx.author.send("You cant not use this command!")
