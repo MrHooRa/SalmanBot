@@ -1,5 +1,3 @@
-from sys import prefix
-from discord import client
 from logs import *
 from discord.ext import commands
 import discord, asyncio, random
@@ -13,7 +11,7 @@ class Commands(commands.Cog):
     def __init__(self, bot ,rd):
         self.bot = bot
         self.rd = rd
-        self.logs = Logs(name='commands.py', tabs=2)
+        self.logs = Logs(name='commands.py')
 
     @commands.Cog.listener()
     async def on_ready(self):
