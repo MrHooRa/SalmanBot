@@ -2,3 +2,4 @@
 *.mp3
 *.log
 *.pyc
+class/__pycache__/
