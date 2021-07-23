@@ -9,12 +9,12 @@
 * Temp channels.
 * TTS (Text To Speech).
 * Special commands (Clear, Wheel).
+* Reddit posts (You can choose what subreddit you want!)
 
 ⭐ Upcoming features:
 -
 - Statistics reports & data visualization by using online database.
 - Math equations.
-- Share new reddit upvote posts.
 
 📎 Updates:
 -
@@ -24,6 +24,8 @@
 - tts command work perfect. Bot will leave after end of speech immediately.
 - Temp channel admin can manage channel (Edit chanel name, limit and delete it!).
 - Add prefix command for admins to change bot prefix.
+- New reddit posts class.
+- Database class to make easy connections.
 
 🧰 Fixes:
 -
