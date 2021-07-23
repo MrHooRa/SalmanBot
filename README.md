@@ -22,8 +22,8 @@
 - Add corg system to main.py.
 - New temp channel task.
 - tts command work perfect. Bot will leave after end of speech immediately.
-- Temp channel admin can manage channel (Edit chanel name, limit and delete it!).
-- Add prefix command for admins to change bot prefix.
+- Temp channel admin can manage channel (Edit channel name, limit and delete it!). Alos can disconnect anyone in it own channel!
+- Add prefix command for server admins to change bot prefix.
 - New reddit posts class.
 - Database class to make easy connections.
 
