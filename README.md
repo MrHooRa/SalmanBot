@@ -6,15 +6,15 @@
 
 :heavy_check_mark: What this bot can do?
 -
-* Temp channels 
-* TTS (Text To Speech)
-* Special commands (Clear, Wheel)
+* Temp channels.
+* TTS (Text To Speech).
+* Special commands (Clear, Wheel).
 
 ⭐ Upcoming features:
 -
 - Statistics reports & data visualization by using online database.
 - Math equations.
-- Share new reddit upvote posts
+- Share new reddit upvote posts.
 
 📎 Updates:
 -
@@ -23,6 +23,7 @@
 - New temp channel task.
 - tts command work perfect. Bot will leave after end of speech immediately.
 - Temp channel admin can manage channel (Edit chanel name, limit and delete it!).
+- Add prefix command for admins to change bot prefix.
 
 🧰 Fixes:
 -
