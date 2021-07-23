@@ -1,8 +1,5 @@
-from logs import *
-import discord.ext
 from discord.ext import tasks, commands
-
-temp_channel_id = "830892717814579200"
+from logs import *
 
 class Tasks(commands.Cog):
     """This class contains all commands that are used in discord by users"""
@@ -42,7 +39,4 @@ class Tasks(commands.Cog):
         # except Exception as e:
         #     self.logs.log(f"Channel ID: {temp_channel_id} -> Exception: {e}", True, type="Error")
     
-    @tempChannels.before_loop
-    async def before_tempChannels(self):
-        self.logs.log("Temp channel function waiting...", True)
-        await self.bot.wait_until_ready()
+    
