@@ -39,7 +39,7 @@ class runDiscord():
                 self.prefix = str(setPrefix)
                 return True
             except Exception as e:
-                self.logs.log("Error while change bot_prefix", True, "Error", author=author)
+                self.logs.log(f"Error while change bot_prefix. -> Exception: {e}", True, "Error", author=author)
                 return False
 
     def _description(self, setDescription = "__defualt__", author="Bot"):
@@ -67,4 +67,4 @@ class runDiscord():
         try:
             self.client.add_cog(className)
         except Exception as e:
-            self.logs.log(f"add_cog did not work. Exception: {e}")
+            self.logs.log(f"add_cog did not work. -> Exception: {e}")
