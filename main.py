@@ -1,12 +1,6 @@
 """
-SalmanBot - BETA!
+SalmanBot - 0.1!
 -----------------
-This discord bot can do:-
-    1) Reddit new upvote posts
-    2) Wheel - DONE
-    3) TTS (Text To Speech) - DONE
-    4) Special commands (clear)
-    5) Math equations
 
 ===== Check these websites for more info =====
 
@@ -23,11 +17,29 @@ This discord bot can do:-
 
 # https://discordpy.readthedocs.io/en/stable/index.html
 # https://github.com/Rapptz/discord.py/tree/v1.7.3/examples
+# https://towardsdatascience.com/how-to-use-the-reddit-api-in-python-5e05ddfd1e5c
 
 """
 
-#TODO: Do NOT forget to put Forbidden exception in all classes!
+# TODO: Do NOT forget to put Forbidden exception in all classes!
 # Forbidden: For bot, if the bot did not have permission to do something.
+
+# TODO: Create new config file.
+# Use python config (https://docs.python.org/3/library/configparser.html)
+# https://towardsdatascience.com/from-novice-to-expert-how-to-write-a-configuration-file-in-python-273e171a8eb3
+
+import sys
+sys.path.append("class")
+
+import logging
+import runDiscord
+from logs import *
+from commands import Commands
+from tasks import Tasks
+from tempChannel import TempChannels
+from reddit import Reddit
+from decouple import config
+import discord
 
 BOT_DETAILS = {
     'name':         "SalmanBot",
@@ -40,54 +52,34 @@ BOT_DETAILS = {
     'guild_id': 603958784230162442,
     'temp_channel_id': 867471772441903135,
     'temp_channel_category': 866660422282379274,
-    'temp_channel_name': "$MEMBER_NAME$ Channel",         # Use $MEMBER_NAME$ for member name
-    'admin_roles': []
+    # Use $MEMBER_NAME$ for member name
+    'temp_channel_name': "$MEMBER_NAME$ Channel",
+    'admin_roles': [],
+    'reddit_channel': 806551646321901638
 }
 
 # DO NOT EDIT THIS!
 BOT_ATT = {
     'guild': None,
-    'temp_channel_category': None
+    'temp_channel_category': None,
+    'temp_channel': None
 }
-
-import sys
-
-# Defualt packages
-import asyncio
-import logging
-
-# SalmnBot classes
-sys.path.append("class")
-import runDiscord
-from logs import *
-from commands import Commands
-from tasks import Tasks
-from tempChannel import TempChannels
-
-# Get env values
-from decouple import config
-
-# Discord packages
-import discord
 
 logger = logging.getLogger('discord')
 logger.setLevel(logging.DEBUG)
-handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
+handler = logging.FileHandler(
+    filename='discord.log',
+    encoding='utf-8', mode='w')
 handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
 logger.addHandler(handler)
 
 logs = Logs(name='main.py', tabs=2)
 
-# V=================== Database details (For Reddit) ===================V #
-dataBase = (config('DB_HOSTNAME'), 
-            config('DB_USERNAME'),
-            config('DB_PASSWORD'), 
-            config('DB_NAME'))
-# ^=====================================================^ #
-
 # V=================== Discord details ==================V #
-rd = runDiscord.runDiscord(config('TOKEN'), description=f"[!] {BOT_DETAILS['name']} {BOT_DETAILS['verison']}", prefix=BOT_DETAILS['default_prefix'])
-client = rd._client()
+rd = runDiscord.runDiscord(config('TOKEN'),
+                           description=f"[!] {BOT_DETAILS['name']} {BOT_DETAILS['verison']}",
+                           prefix=BOT_DETAILS['default_prefix'])
+client = rd.client
 client.command_prefix = BOT_DETAILS['default_prefix']
 # ^=====================================================^ #
 
@@ -95,13 +87,15 @@ client.command_prefix = BOT_DETAILS['default_prefix']
 @client.event
 async def on_ready():
     # tempChannel.start()
-    logs.log(f"Logged in as (Name: {client.user.name}, ID: {client.user.id})", True)
+    logs.log(
+        f"Logged in as (Name: {client.user.name}, ID: {client.user.id})", True)
 
     # Set guild
     BOT_ATT['guild'] = client.get_guild(BOT_DETAILS['guild_id'])
 
     # Set temp channle
-    BOT_ATT['temp_channel'] = client.get_channel(BOT_DETAILS['temp_channel_id'])
+    BOT_ATT['temp_channel'] = client.get_channel(
+        BOT_DETAILS['temp_channel_id'])
 
     # Set temp category
     categories = BOT_ATT['guild'].categories
@@ -112,18 +106,16 @@ async def on_ready():
             BOT_ATT['temp_channel_category'] = cg
             break
 
-#TODO: Take this function to tasks.py or create tempChannel.py #DONE (To tmepChannel.py)
-#TODO: Store all temp channel to corrent            #DONE
-#TODO: Try pass att to tempChannel by creating new function in tempChannel.py
-
 # Cogs
 try:
     rd.add_cog(Commands(client, rd))
     rd.add_cog(Tasks(client))
     rd.add_cog(TempChannels(client, BOT_DETAILS))
+    rd.add_cog(Reddit(client, BOT_DETAILS))
 except Exception as e:
-    logs.log(f"{BOT_DETAILS['name']} NOT READY. -> Exception: {e}", True, type="Error")
-    
+    logs.log(
+        f"{BOT_DETAILS['name']} NOT READY. -> Exception: {e}", True, type="Error")
+
 msg = f"""
     ***********************************
             {BOT_DETAILS['name']} {BOT_DETAILS['verison']}
@@ -138,7 +130,8 @@ msg = f"""
 ##+##+##+##+##+##+##+##+##+##+##+##+##+##+##+##+##
 
 if __name__ == '__main__':
-    logs.newLine("\n**********************************************************\n")
+    logs.newLine(
+        "\n**********************************************************\n")
     logs.log("Run SalmanBot", False)
-    logs.log(msg, True, saveInLog = False)
+    logs.log(msg, True, saveInLog=False)
     rd.run()
