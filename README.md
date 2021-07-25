@@ -33,4 +33,4 @@
 - Temp channel method now work with no errors (In the past, user will face error when delete channel by its own side!).
 - SalmanBot will reply to member when used tts while it's not in voice channel.
 - Fix on_ready issues (sometimes bot call on_ready randomly).
-- Fix reddit.py issues.
+- Fix reddit.py issues (Sometimes request get error).
