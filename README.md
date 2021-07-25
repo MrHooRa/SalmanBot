@@ -26,8 +26,11 @@
 - Add prefix command for server admins to change bot prefix.
 - New reddit posts class.
 - Database class to make easy connections.
+- Add tts prevent spam.
 
 🧰 Fixes:
 -
 - Temp channel method now work with no errors (In the past, user will face error when delete channel by its own side!).
 - SalmanBot will reply to member when used tts while it's not in voice channel.
+- Fix on_ready issues (sometimes bot call on_ready randomly).
+- Fix reddit.py issues.
