@@ -1,4 +1,4 @@
-# SalmanBot 0.1v :smiley:
+# (Discord) SalmanBot 0.1v :smiley:
 
 ▶️ This bot working in python 3.9.6+ and Discord version 1.7.3
 
