@@ -1,8 +1,31 @@
-# (Discord) SalmanBot 0.1v :smiley:
+# SalmanBot 0.1v :smiley:
+  
+ (SalmanBot) for discord servers.
 
 ▶️ This bot working in python 3.9.6+ and Discord version 1.7.3
 
 ▶️ My twitter: @MrHoora
+
+ Setup (On windows):
+ -
+ - Step 1: Create .env file contain:
+  ```
+  TOKEN=    <- Your discord app token
+
+  REDDIT_CLIENT_ID=     <- Reddit client id
+  REDDIT_CLIENT_SECRET= <- Reddit client secret
+  REDDIT_USERNAME=      <- Reddit login username
+  REDDIT_PASSWORD=      <- Reddit login password
+  REDDIT_USERAGENT=SalmanBot
+
+  DB_NAME=      <- Database name
+  DB_USERNAME=  <- Database username
+  DB_PASSWORD=  <- Database password
+  DB_HOSTNAME=  <- Database hostname
+
+  CUTTLY_KEY=   <- cuttly api key (You can create free account from https://cutt.ly/)
+  ```
+ - Step 2: Run ``` py main.py ```
 
 :heavy_check_mark: What this bot can do?
 -
