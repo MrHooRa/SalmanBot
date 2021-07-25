@@ -35,7 +35,7 @@ class Reddit(commands.Cog):
         if not self.updateReddit.is_running():
             self.updateReddit.start()
 
-    @tasks.loop(seconds=6600)
+    @tasks.loop(seconds=1800)
     async def updateToken(self):
         """Update reddit token every ~2 hours"""
         self.request(config('REDDIT_CLIENT_ID'), config('REDDIT_CLIENT_SECRET'),
