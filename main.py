@@ -18,8 +18,11 @@ SalmanBot - 0.1!
 # https://discordpy.readthedocs.io/en/stable/index.html
 # https://github.com/Rapptz/discord.py/tree/v1.7.3/examples
 # https://towardsdatascience.com/how-to-use-the-reddit-api-in-python-5e05ddfd1e5c
+# Discord embed: https://cog-creators.github.io/discord-embed-sandbox/
+# Json error codes :https://discord.com/developers/docs/topics/opcodes-and-status-codes#json-json-error-codes
 
 """
+
 
 # TODO: Do NOT forget to put Forbidden exception in all classes!
 # Forbidden: For bot, if the bot did not have permission to do something.
@@ -42,21 +45,22 @@ from decouple import config
 import discord
 
 BOT_DETAILS = {
-    'name':         "SalmanBot",
-    'author':       "Salman, MrHora",
-    'github':       "https://github.com/MrHooRa",
-    'bot_github':   "https://github.com/MrHooRa/SalmanBot",
-    'verison':      "0.1",
+    'name': "SalmanBot",
+    'author': "Salman, MrHora",
+    'github': "https://github.com/MrHooRa",
+    'bot_github': "https://github.com/MrHooRa/SalmanBot",
+    'verison': "0.1",
     'default_prefix': "%",
     'python_version': "3.9.6",
     'guild_id': 603958784230162442,
     'temp_channel_id': 867471772441903135,
     'temp_channel_category': 866660422282379274,
-    # Use $MEMBER_NAME$ for member name
-    'temp_channel_name': "$MEMBER_NAME$ Channel",
+    'temp_channel_name': "$MEMBER_NAME$ Channel", # Use $MEMBER_NAME$ for member name
     'admin_roles': [],
-    'reddit_channel': 806551646321901638
+    'reddit_channel': 806551646321901638,
+    'cuttly_key': config('CUTTLY_KEY')
 }
+
 
 # DO NOT EDIT THIS!
 BOT_ATT = {
@@ -81,30 +85,34 @@ rd = runDiscord.runDiscord(config('TOKEN'),
                            prefix=BOT_DETAILS['default_prefix'])
 client = rd.client
 client.command_prefix = BOT_DETAILS['default_prefix']
-# ^=====================================================^ #
 
-# Bot on_ready
-@client.event
-async def on_ready():
-    # tempChannel.start()
-    logs.log(
-        f"Logged in as (Name: {client.user.name}, ID: {client.user.id})", True)
+class MyClient(discord.Client):
+    def __init__(self):
+        self.is_running = False
 
-    # Set guild
-    BOT_ATT['guild'] = client.get_guild(BOT_DETAILS['guild_id'])
+    async def on_ready(self):
+        if self.is_running:
+            return
 
-    # Set temp channle
-    BOT_ATT['temp_channel'] = client.get_channel(
-        BOT_DETAILS['temp_channel_id'])
+        logs.log(
+            f"Logged in as (Name: {client.user.name}, ID: {client.user.id})", True)
 
-    # Set temp category
-    categories = BOT_ATT['guild'].categories
+        # Set guild
+        BOT_ATT['guild'] = client.get_guild(BOT_DETAILS['guild_id'])
 
-    # Searh on category and get temp category
-    for cg in categories:
-        if cg.id == BOT_DETAILS['temp_channel_category']:
-            BOT_ATT['temp_channel_category'] = cg
-            break
+        # Set temp channle
+        BOT_ATT['temp_channel'] = client.get_channel(
+            BOT_DETAILS['temp_channel_id'])
+
+        # Set temp category
+        categories = BOT_ATT['guild'].categories
+
+        # Searh on category and get temp category
+        for cg in categories:
+            if cg.id == BOT_DETAILS['temp_channel_category']:
+                BOT_ATT['temp_channel_category'] = cg
+                break
+        self.is_running = True
 
 # Cogs
 try:
