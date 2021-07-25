@@ -1,8 +1,31 @@
 # SalmanBot 0.1v :smiley:
+  
+ (SalmanBot) for discord servers.
 
 ▶️ This bot working in python 3.9.6+ and Discord version 1.7.3
 
 ▶️ My twitter: @MrHoora
+
+ Setup (On windows):
+ -
+ - Step 1: Create .env file contain:
+  ```
+  TOKEN=    <- Your discord app token
+
+  REDDIT_CLIENT_ID=     <- Reddit client id
+  REDDIT_CLIENT_SECRET= <- Reddit client secret
+  REDDIT_USERNAME=      <- Reddit login username
+  REDDIT_PASSWORD=      <- Reddit login password
+  REDDIT_USERAGENT=SalmanBot
+
+  DB_NAME=      <- Database name
+  DB_USERNAME=  <- Database username
+  DB_PASSWORD=  <- Database password
+  DB_HOSTNAME=  <- Database hostname
+
+  CUTTLY_KEY=   <- cuttly api key (You can create free account from https://cutt.ly/)
+  ```
+ - Step 2: Run ``` py main.py ```
 
 :heavy_check_mark: What this bot can do?
 -
@@ -33,4 +56,8 @@
 - Temp channel method now work with no errors (In the past, user will face error when delete channel by its own side!).
 - SalmanBot will reply to member when used tts while it's not in voice channel.
 - Fix on_ready issues (sometimes bot call on_ready randomly).
-- Fix reddit.py issues.
+- Fix reddit.py issues (Sometimes request get error).
+
+🔴 Knowing issues:
+-
+- Reddit class block SalmanBot (Stop bot around 20 seconds).
