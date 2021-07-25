@@ -11,6 +11,7 @@ class TempChannels(commands.Cog):
         self.bot =  bot
         self.BOT_DETAILS = BOT_DETAILS
         self.logs = Logs(name="tempChannels.py")
+        self.is_running = False
 
         self.corrent_tempChannels = []
         # corrent_tempChannel:
@@ -46,12 +47,16 @@ class TempChannels(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        # To set all atts
-        self.set_BOT_ATT()
-        self.tempChannels.start()
+        if not self.is_running:
+            # To set all atts
+            self.set_BOT_ATT()
+            self.is_running = True
 
-        # When tempChannel.py ready
-        self.logs.log("Temp Channels is ready!", True)
+        if not self.tempChannels.is_running():
+            self.tempChannels.start()
+
+            # When tempChannel.py ready
+            self.logs.log("Temp Channels is ready!", True)
 
     @tasks.loop(seconds=1)
     async def tempChannels(self):
@@ -92,10 +97,10 @@ class TempChannels(commands.Cog):
 
                 # Insert new temp channel details to corrent_tempChannels array
                 self.corrent_tempChannels.append([createdChannel, self.BOT_ATT['temp_channel_category'], member])
-                
+
                 # For log
                 self.logs.log(f"Create new channel (Channel name: {temp_channelName}, Catrgory: {self.BOT_ATT['temp_channel_category']}, Member ID: {member.id})", True)
-        
+
         except discord.HTTPException as httperror:
             self.logs.log(f'Creating the channel failed! (Member ID: {member.id}). -> Exception: {httperror}', True, type="Error")
 

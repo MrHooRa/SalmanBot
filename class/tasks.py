@@ -7,7 +7,10 @@ class Tasks(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.logs = Logs(name='tasks.py', tabs=2)
+        self.is_running = False
 
     @commands.Cog.listener()
     async def on_ready(self):
-        self.logs.log("Tasks is ready!", True)    
+        if not self.is_running:
+            self.logs.log("Tasks is ready!", True)    
+            self.is_running = True
