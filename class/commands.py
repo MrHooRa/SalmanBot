@@ -7,15 +7,18 @@ from gtts import gTTS
 
 class Commands(commands.Cog):
     """This class contains all commands that are used in discord by members"""
-    
+
     def __init__(self, bot ,rd):
+        self.is_running = False
         self.bot = bot
         self.rd = rd
         self.logs = Logs(name='commands.py')
 
     @commands.Cog.listener()
     async def on_ready(self):
-        self.logs.log("Commands is ready!", True)
+        if not self.is_running:
+            self.logs.log("Commands is ready!", True)
+            self.is_running = True
 
     @commands.command(pass_context=True, name="tts", help="- TTS (Text To Speech)\tUsage: %tts `lang` `msg`")
     async def _tts(self, ctx, lan, *msg):
@@ -24,6 +27,12 @@ class Commands(commands.Cog):
         Usage: $tts language msg
         language list -> (ar, en, ja, ru, it, etc...) *Note: search in google about languages code!
         """
+
+        # To prevent spam
+        if ctx.voice_client is not None:
+            await ctx.reply(f"الرجاء الإنتظار عدة ثواني", mention_author=True)
+            return
+
         if len(msg) == 0:
             await ctx.reply("الرجاء كتابة نص!", mention_author=True)
             return
@@ -33,7 +42,7 @@ class Commands(commands.Cog):
 
         # Create mp3 voice and play it in discord
         try:
-            if channel != None:    
+            if channel is not None:    
                 ttsMP3 = gTTS(text=msg, lang=lan)
                 ttsMP3.save("mp3/bot_tts.mp3")
 
