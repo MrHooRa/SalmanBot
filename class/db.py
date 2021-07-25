@@ -2,14 +2,12 @@ import mysql.connector
 from mysql.connector import Error
 from logs import *
 
-
 class DB():
     def __init__(self, username, password, database, host):
         self.username = username
         self.password = password
         self.database = database
         self.host = host
-
         self.logs = Logs(name='db.py', tabs=2)
 
     def connect(self):
@@ -25,6 +23,7 @@ class DB():
             return False
     
     def close(self):
+        """Close connection"""
         try:
             if self.connection.is_connected():
                 self.connection.close()
