@@ -1,4 +1,5 @@
 from inspect import getcallargs
+import aiohttp
 import discord
 from discord.embeds import Embed
 from discord.ext import tasks, commands
@@ -45,11 +46,11 @@ class Reddit(commands.Cog):
     async def updateReddit(self):
         """Get reddit posts from specific subreddit"""
         try:
-            await self.update("cat", 'hot', 10)
+            await self.update("cat", 'hot', 20)
             await self.update("CrazyFuckingVideos", 'hot', 5)
             await self.update("maybemaybemaybe", 'hot', 5)
             await self.update("funnycats", 'hot', 10)
-            await self.update("AnimalsBeingDerps", 'hot', 5)
+            await self.update("AnimalsBeingDerps", 'hot', 10)
         except Exception as e:
             self.logs.log(
                 f"Something happened. -> Exception: {e}", True, "Error")
@@ -92,26 +93,28 @@ class Reddit(commands.Cog):
     @commands.Cog.listener()
     async def update(self, subreddit: str, type='new', limit=10, table_name='reddit'):
         """Update reddit posts and push it into text channel."""
-        posts = self.get_posts(subreddit, type, limit, table_name)
+
+        # get request (By using aiohttp)
+        try:
+            async with aiohttp.ClientSession() as session:
+                res = await session.get(f"https://oauth.reddit.com/r/{subreddit}/{type}",
+                                headers=self.headers, params={'limit': limit})
+                res = await res.json()
+        except Exception as e:
+            self.logs.log(f"<update_aiohttp> failed to get response ({subreddit}, {type}, {limit})", True, "Testing")
+
+        posts = self.get_posts(res['data']['children'], table_name)
+
         if len(posts) > 0:
             for post in posts:
                 await self.redditChannel.send(embed=post[1])
             self.logs.log(
                 f"Update {len(posts)} post(s) (From: {subreddit}) successfully!", True)
 
-    def get_posts(self, subreddit: str, type='new', limit: int = 10, table_name: str = 'reddit'):
+    def get_posts(self, res, table_name):
+        """Get posts from specific subreddit"""
         posts = []
-        try:
-            res = requests.get(f"https://oauth.reddit.com/r/{subreddit}/{type}",
-                               headers=self.headers, params={'limit': limit})
-            self.logs.log(f"<get_posts_res_testing> res={res}", True, "Testing")
-        except Exception as e:
-            self.logs.log(f"<get_posts_res> Full traceback -> {traceback.print_exc()}", True, "Error")
-            if not self.request(config('REDDIT_CLIENT_ID'), config('REDDIT_CLIENT_SECRET'),
-                                config('REDDIT_USERNAME'), config('REDDIT_PASSWORD'), config('REDDIT_USERAGENT')):
-                self.logs.log(
-                    f"(get_post) Can not request. -> Exception: {e}", True, "Error")
-                return None
+
         # Check if database is connect
         try:
             if self.db.connect():
@@ -123,13 +126,7 @@ class Reddit(commands.Cog):
             self.logs.log(
                 f"get_posts. connnection failed!. -> Exception: {e}", True, type="Error")
 
-        # Get all posts from res
-        try:
-            res_json = res.json()['data']['children']
-        except Exception as e:
-            self.logs.log(f"<res_json> did not work.", True, "Error")
-
-        for post in res_json:
+        for post in res:
             # Check if this post is already posted
             if self.check_post(con, post['data']['id'], table_name):
                 details = {
