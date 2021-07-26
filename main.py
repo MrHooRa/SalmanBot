@@ -20,9 +20,9 @@ SalmanBot - 0.1!
 # https://towardsdatascience.com/how-to-use-the-reddit-api-in-python-5e05ddfd1e5c
 # Discord embed: https://cog-creators.github.io/discord-embed-sandbox/
 # Json error codes :https://discord.com/developers/docs/topics/opcodes-and-status-codes#json-json-error-codes
-
+# reqeust in discord.py (To prevent blocking): https://www.reddit.com/r/Discord_Bots/comments/cmrake/sending_nonblocking_web_requests_with_discordpy/
+# Reddit videos (Mearge video with audio) https://gist.github.com/aminnj/2d05f7f2173e12d518f455d47cdf690d
 """
-
 
 # TODO: Do NOT forget to put Forbidden exception in all classes!
 # Forbidden: For bot, if the bot did not have permission to do something.
