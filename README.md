@@ -8,7 +8,7 @@
 
  Setup (On windows):
  -
- - Step 1: Create .env file contain:
+ - Step 1: Create .env file in the same main.py directory contain:
   ```
   TOKEN=    <- Your discord app token
 
