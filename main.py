@@ -52,7 +52,7 @@ BOT_DETAILS = {
     'verison': "0.1",
     'default_prefix': "%",
     'python_version': "3.9.6",
-    'guild_id': 603958784230162442,
+    'guild_id': ---------,      # Change this to your guild id
     'temp_channel_id': 867471772441903135,
     'temp_channel_category': 866660422282379274,
     'temp_channel_name': "$MEMBER_NAME$ Channel", # Use $MEMBER_NAME$ for member name
