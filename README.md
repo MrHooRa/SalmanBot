@@ -4,8 +4,6 @@
 
 ▶️ This bot working in python 3.9.6+ and Discord version 1.7.3
 
-▶️ My twitter: @MrHoora
-
  Setup (On windows):
  -
  - Step 1: Create .env file in the same main.py directory contain:
